@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Family Map</string>
+    <string name="textview">TextView</string>
+    <string name="Firstname">Firstname</string>
+    <string name="Lastname">Lastname</string>
+    <string name="ServerHost">Server Host</string>
+    <string name="ServerPort">Server Port</string>
+    <string name="UserName">User Name</string>
+    <string name="Password">Password</string>
+    <string name="Email">Email</string>
+    <string name="Male">Male</string>
+    <string name="Female">Female</string>
+    <string name="SignIn">Sign In</string>
+    <string name="Register">Register</string>
+    <string name="Gender">Gender</string>
 </resources>
