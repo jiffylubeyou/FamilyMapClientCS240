@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -13,6 +16,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import Tasks.GetDataTask;
+import Tasks.LoginTask;
+import requestresponse.LoginRequest;
+import requestresponse.LoginResult;
+import requestresponse.PersonRequest;
 
 public class LoginFragment extends Fragment {
 
@@ -56,7 +70,48 @@ public class LoginFragment extends Fragment {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //logic goes here I think
+                try {
+                    LoginRequest request = new LoginRequest();
+                    request.setDataFromRegister(UserNameField.getText().toString(),
+                            PasswordField.getText().toString());
+
+                    Handler uiThreadMessageHandler = new Handler(Looper.getMainLooper())
+                    {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            Bundle bundle = msg.getData();
+                            if (bundle.getString(DataCache.AUTH_TOKEN_KEY) != null)
+                            {
+                                //do the handler and task for the GetDataTask as well
+                                Handler uiThreadMessageHandler2 = new Handler(Looper.getMainLooper())
+                                {
+                                    @Override
+                                    public void handleMessage(Message msg2) {
+                                        Bundle bundle2 = msg2.getData();
+
+                                    }
+                                };
+                                GetDataTask getDataTask = new GetDataTask(uiThreadMessageHandler2,
+                                        DataCache.getUsername(), ServerHostField.getText().toString(),
+                                        ServerPortField.getText().toString());
+                                ExecutorService executor2 = Executors.newSingleThreadExecutor();
+                                executor2.submit(getDataTask);
+                            } else {
+                                Toast.makeText(getActivity(),bundle.getString(DataCache.MESSAGE_KEY), Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    };
+
+                    LoginTask logintask = new LoginTask(uiThreadMessageHandler, request,
+                            ServerHostField.getText().toString(), ServerPortField.getText().toString());
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    executor.submit(logintask);
+                }
+                catch (Exception e)
+                {
+                    //print stuff
+                }
             }
         });
 

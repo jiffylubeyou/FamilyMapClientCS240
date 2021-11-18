@@ -106,7 +106,7 @@ public class ServerProxy {
         return null;
     }
 
-    public RegisterResult register(RegisterRequest request)
+    public LoginResult register(RegisterRequest request)
     {
         try {
             // Create a URL indicating where the server is running, and which
@@ -142,7 +142,7 @@ public class ServerProxy {
                 os.write(input, 0, input.length);
             }
 
-            RegisterResult result;
+            LoginResult result;
             try
             {
                 if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -152,7 +152,7 @@ public class ServerProxy {
                     while ((responseLine = br.readLine()) != null) {
                         response.append(responseLine.trim());
                     }
-                    result = gsonSerializer.fromJson(response.toString(), RegisterResult.class);
+                    result = gsonSerializer.fromJson(response.toString(), LoginResult.class);
                     return result;
                 }
                 else
@@ -163,7 +163,7 @@ public class ServerProxy {
                     while ((responseLine = br.readLine()) != null) {
                         response.append(responseLine.trim());
                     }
-                    result = gsonSerializer.fromJson(response.toString(), RegisterResult.class);
+                    result = gsonSerializer.fromJson(response.toString(), LoginResult.class);
                     return result;
                 }
             }

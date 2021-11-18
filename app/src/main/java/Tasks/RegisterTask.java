@@ -9,15 +9,17 @@ import kstrong3.familymap.DataCache;
 import kstrong3.familymap.ServerProxy;
 import requestresponse.LoginRequest;
 import requestresponse.LoginResult;
+import requestresponse.RegisterRequest;
+import requestresponse.RegisterResult;
 
-public class LoginTask implements Runnable {
+public class RegisterTask implements Runnable {
 
     private final Handler messageLoginTaskHandler;
-    private final LoginRequest request;
+    private final RegisterRequest request;
     private final String serverHost;
     private final String serverPort;
 
-    public LoginTask(Handler messageLoginTaskHandler, LoginRequest request, String serverHost, String serverPort)
+    public RegisterTask(Handler messageLoginTaskHandler, RegisterRequest request, String serverHost, String serverPort)
     {
         this.messageLoginTaskHandler = messageLoginTaskHandler;
         this.request = request;
@@ -29,7 +31,7 @@ public class LoginTask implements Runnable {
     public void run()
     {
         ServerProxy proxy = new ServerProxy(serverHost,serverPort);
-        LoginResult result = proxy.login(request);
+        LoginResult result = proxy.register(request);
         DataCache.getInstance().setUsername(result.getUsername());
         DataCache.getInstance().setPersonID(result.getPersonID());
         sendMessage(result);
