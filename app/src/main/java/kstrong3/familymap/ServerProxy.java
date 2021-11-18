@@ -2,6 +2,7 @@ package kstrong3.familymap;
 
 import android.app.DownloadManager;
 import android.hardware.biometrics.BiometricManager;
+import android.provider.ContactsContract;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import requestresponse.EventRequest;
-import requestresponse.EventResult;
 import requestresponse.EventResultArray;
 import requestresponse.LoginRequest;
 import requestresponse.LoginResult;
@@ -199,7 +199,7 @@ public class ServerProxy {
 
 
             // Add an auth token to the request in the HTTP "Authorization" header
-            http.addRequestProperty("Authorization", request.username);
+            http.addRequestProperty("Authorization", DataCache.getInstance().getAuthToken());
 
             // Specify that we would like to receive the server's response in JSON
             // format by putting an HTTP "Accept" header on the request (this is not
@@ -266,7 +266,7 @@ public class ServerProxy {
 
 
             // Add an auth token to the request in the HTTP "Authorization" header
-            http.addRequestProperty("Authorization", request.username);
+            http.addRequestProperty("Authorization", DataCache.getInstance().getAuthToken());
 
             // Specify that we would like to receive the server's response in JSON
             // format by putting an HTTP "Accept" header on the request (this is not

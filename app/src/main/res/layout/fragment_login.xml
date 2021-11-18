@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/loginFragment"
     tools:context=".LoginFragment">
 
     <TableLayout
@@ -29,7 +30,7 @@
                 android:text="@string/ServerHost" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName2"
+                android:id="@+id/ServerHostField"
                 android:layout_width="224dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -50,11 +51,12 @@
                 android:text="@string/ServerPort" />
 
             <EditText
-                android:id="@+id/editTextNumber"
+                android:id="@+id/ServerPortField"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="number"
+                android:text="8080"
                 tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
         </TableRow>
 
@@ -69,7 +71,7 @@
                 android:text="@string/UserName" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName4"
+                android:id="@+id/UserNameField"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -90,11 +92,12 @@
                 android:text="@string/Password" />
 
             <EditText
-                android:id="@+id/editTextTextPassword"
+                android:id="@+id/PasswordField"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPassword"
+                android:text="Password"
                 tools:ignore="SpeakableTextPresentCheck" />
         </TableRow>
 
@@ -109,7 +112,7 @@
                 android:text="@string/Firstname" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName5"
+                android:id="@+id/FirstNameField"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -129,7 +132,7 @@
                 android:text="@string/Lastname" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName6"
+                android:id="@+id/LastNameField"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -149,11 +152,12 @@
                 android:text="@string/Email" />
 
             <EditText
-                android:id="@+id/editTextTextEmailAddress"
+                android:id="@+id/EmailField"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textEmailAddress"
+                android:text="jane@cs.byu.edu"
                 tools:ignore="SpeakableTextPresentCheck" />
 
         </TableRow>

@@ -14,12 +14,13 @@ public class DataCache {
     //List<Person> people;
     //List<Event> events;
     //The String keys should be the personIDs and eventIDs
-    TreeMap<String, Person> people = new TreeMap<String, Person>();
-    TreeMap<String, Event> Events = new TreeMap<String, Event>();
-    TreeMap<String, List<Event>> personEvents = new TreeMap<String, List<Event>>();
-    //This string is a personID
-    TreeSet<String> paternalAncestors = new TreeSet<String>();
-    TreeSet<String> maternalAncestors = new TreeSet<String>();
+    private String authToken;
+//    TreeMap<String, Person> people = new TreeMap<String, Person>();
+//    TreeMap<String, Event> Events = new TreeMap<String, Event>();
+//    TreeMap<String, List<Event>> personEvents = new TreeMap<String, List<Event>>();
+//    //This string is a personID
+//    TreeSet<String> paternalAncestors = new TreeSet<String>();
+//    TreeSet<String> maternalAncestors = new TreeSet<String>();
 
     public static DataCache getInstance()
     {
@@ -27,6 +28,16 @@ public class DataCache {
     }
 
     private DataCache() {}
+
+    public void setAuthToken(String authToken)
+    {
+        this.authToken = authToken;
+    }
+
+    public String getAuthToken()
+    {
+        return this.authToken;
+    }
 
 //    public Person getPersonByID(String personID)
 //    {
