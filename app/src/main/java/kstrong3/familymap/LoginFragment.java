@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,15 +19,19 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.util.TreeMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import Tasks.GetDataTask;
 import Tasks.LoginTask;
+import Tasks.RegisterTask;
+import model.Person;
 import requestresponse.LoginRequest;
 import requestresponse.LoginResult;
 import requestresponse.PersonRequest;
+import requestresponse.RegisterRequest;
 
 public class LoginFragment extends Fragment {
 
@@ -88,7 +93,13 @@ public class LoginFragment extends Fragment {
                                     @Override
                                     public void handleMessage(Message msg2) {
                                         Bundle bundle2 = msg2.getData();
-
+                                        TreeMap<String, Person> person = DataCache.getInstance().people;
+                                        Toast.makeText(getActivity(),
+                                                DataCache.getInstance().people.get(DataCache.personID).getFirstName()
+                                                 + " " +
+                                                DataCache.getInstance().people.get(DataCache.personID).getLastName(),
+                                                Toast.LENGTH_SHORT).show();
+                                                //switch to map fragment here
                                     }
                                 };
                                 GetDataTask getDataTask = new GetDataTask(uiThreadMessageHandler2,
@@ -120,7 +131,67 @@ public class LoginFragment extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //logic goes here I think
+                try {
+                    String gender;
+                    if (radioMale.isChecked())
+                    {
+                        gender = "m";
+                    }
+                    else
+                    {
+                        gender = "f";
+                    }
+                    RegisterRequest request = new RegisterRequest();
+                    request.username = UserNameField.getText().toString();
+                    request.password = PasswordField.getText().toString();
+                    request.email = EmailField.getText().toString();
+                    request.firstName = FirstNameField.getText().toString();
+                    request.lastName = LastNameField.getText().toString();
+                    request.gender = gender;
+
+                    Handler uiThreadMessageHandler = new Handler(Looper.getMainLooper())
+                    {
+                        @Override
+                        public void handleMessage(Message msg) {
+
+                            Bundle bundle = msg.getData();
+                            if (bundle.getString(DataCache.AUTH_TOKEN_KEY) != null)
+                            {
+                                //do the handler and task for the GetDataTask as well
+                                Handler uiThreadMessageHandler2 = new Handler(Looper.getMainLooper())
+                                {
+                                    @Override
+                                    public void handleMessage(Message msg2) {
+                                        Bundle bundle2 = msg2.getData();
+                                        Toast.makeText(getActivity(),
+                                                DataCache.getInstance().people.get(DataCache.personID).getFirstName()
+                                                        + " " +
+                                                        DataCache.getInstance().people.get(DataCache.personID).getLastName(),
+                                                Toast.LENGTH_SHORT).show();
+                                                //switch to map fragment here
+                                    }
+                                };
+                                GetDataTask getDataTask = new GetDataTask(uiThreadMessageHandler2,
+                                        DataCache.getUsername(), ServerHostField.getText().toString(),
+                                        ServerPortField.getText().toString());
+                                ExecutorService executor2 = Executors.newSingleThreadExecutor();
+                                executor2.submit(getDataTask);
+                            } else {
+                                Toast.makeText(getActivity(),bundle.getString(DataCache.MESSAGE_KEY), Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    };
+
+                    RegisterTask registerTask = new RegisterTask(uiThreadMessageHandler, request,
+                            ServerHostField.getText().toString(), ServerPortField.getText().toString());
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    executor.submit(registerTask);
+                }
+                catch (Exception e)
+                {
+                    //print stuff
+                }
             }
         });
 

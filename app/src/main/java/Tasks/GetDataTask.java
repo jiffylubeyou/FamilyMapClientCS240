@@ -36,6 +36,7 @@ public class GetDataTask implements Runnable {
         EventResultArray eventResultArray = proxy.getEvents(eventRequest);
         DataCache.getInstance().setPeopleArray(personResultArray.getPeople());
         DataCache.getInstance().setEventsArray(eventResultArray.getEvents());
+        DataCache.getInstance().populateMaps();
         sendMessage();
     }
 

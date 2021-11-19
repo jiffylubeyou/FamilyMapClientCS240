@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
+import android.widget.Toast;
 
 import kstrong3.familymap.DataCache;
 import kstrong3.familymap.ServerProxy;
@@ -32,8 +33,12 @@ public class RegisterTask implements Runnable {
     {
         ServerProxy proxy = new ServerProxy(serverHost,serverPort);
         LoginResult result = proxy.register(request);
-        DataCache.getInstance().setUsername(result.getUsername());
-        DataCache.getInstance().setPersonID(result.getPersonID());
+        if (result.success)
+        {
+            DataCache.getInstance().setAuthToken(result.getAuthtoken());
+            DataCache.getInstance().setUsername(result.getUsername());
+            DataCache.getInstance().setPersonID(result.getPersonID());
+        }
         sendMessage(result);
     }
 

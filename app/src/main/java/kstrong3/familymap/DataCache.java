@@ -18,6 +18,7 @@ public class DataCache {
 
     public static String username;
     public static String personID;
+    public static String userFirstName;
     public static Person[] peopleArray;
     public static Event[] eventsArray;
     TreeMap<String, Person> people = new TreeMap<String, Person>();
@@ -78,6 +79,10 @@ public class DataCache {
     public static Event[] getEventsArray() {
         return eventsArray;
     }
+
+    public void setUserFirstName(String userFirstName) { DataCache.userFirstName = userFirstName; }
+
+    public String getUserFirstName() { return userFirstName; }
 
     public void populateMaps()
     {
