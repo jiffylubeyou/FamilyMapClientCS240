@@ -27,6 +27,8 @@ import java.util.concurrent.Executors;
 import Tasks.GetDataTask;
 import Tasks.LoginTask;
 import Tasks.RegisterTask;
+import kstrong3.familymap.DataCache;
+import kstrong3.familymap.R;
 import model.Person;
 import requestresponse.LoginRequest;
 import requestresponse.LoginResult;
@@ -99,7 +101,11 @@ public class LoginFragment extends Fragment {
                                                  + " " +
                                                 DataCache.getInstance().people.get(DataCache.personID).getLastName(),
                                                 Toast.LENGTH_SHORT).show();
-                                                //switch to map fragment here
+                                        
+                                        //switch to map fragment here
+                                        if(listener != null) {
+                                            listener.notifyDone();
+                                        }
                                     }
                                 };
                                 GetDataTask getDataTask = new GetDataTask(uiThreadMessageHandler2,

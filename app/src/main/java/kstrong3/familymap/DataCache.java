@@ -1,5 +1,7 @@
 package kstrong3.familymap;
 
+import com.google.android.gms.maps.model.Polyline;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -21,9 +23,14 @@ public class DataCache {
     public static String userFirstName;
     public static Person[] peopleArray;
     public static Event[] eventsArray;
-    TreeMap<String, Person> people = new TreeMap<String, Person>();
-    TreeMap<String, Event> events = new TreeMap<String, Event>();
-    TreeMap<String, List<Event>> personEvents = new TreeMap<String, List<Event>>();
+    public static TreeMap<String, Person> people = new TreeMap<String, Person>();
+    public static TreeMap<String, Event> events = new TreeMap<String, Event>();
+    public static TreeMap<String, List<Event>> personEvents = new TreeMap<String, List<Event>>();
+    public static boolean spouseLinesEnabled = true;
+    public static boolean familyTreeLinesEnabled = true;
+    public static boolean lifeStoryLinesEnabled = true;
+    public static Polyline spouseLines;
+    public static List<Polyline> generationLinesList = new ArrayList<>();
 //    //This string is a personID
 //    TreeSet<String> paternalAncestors = new TreeSet<String>();
 //    TreeSet<String> maternalAncestors = new TreeSet<String>();
