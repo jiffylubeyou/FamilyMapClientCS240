@@ -1,5 +1,6 @@
 package kstrong3.familymap;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -7,10 +8,15 @@ import androidx.fragment.app.Fragment;
 
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,6 +35,8 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import Activities.PersonActivity;
+import Activities.SearchActivity;
 import model.Event;
 import model.Person;
 
@@ -70,6 +78,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             //draw the spouse lines
             drawSpouseLines(event, person);
             drawGenerationsLines(event, person);
+            drawLifeStoryLines(event, person);
 
             return false;
         }
@@ -80,11 +89,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         super.onCreateView(layoutInflater, container, savedInstanceState);
         View view = layoutInflater.inflate(R.layout.fragment_maps, container, false);
 
+        setHasOptionsMenu(true);
+
+
         textView = view.findViewById(R.id.mapTextView);
         imageView = view.findViewById(R.id.gender);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        LinearLayout linearLayout = view.findViewById(R.id.mapLinearLayout);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PersonActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
@@ -198,7 +219,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     private void drawGenerationsLines(Event event, Person person)
     {
-        //add width changers here that belong in the datacache
+        DataCache.generationNum = 10;
         drawGenerationsLinesRecusor(event, person);
     }
 
@@ -218,17 +239,35 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                     .add(startPoint)
                     .add(fatherPoint)
                     .color(getResources().getColor(R.color.green))
-                    .width(10);
+                    .width(DataCache.generationNum);
             Polyline line1 = map.addPolyline(options);
             DataCache.generationLinesList.add(line1);
             PolylineOptions options2 = new PolylineOptions()
                     .add(startPoint)
                     .add(motherPoint)
                     .color(getResources().getColor(R.color.green))
-                    .width(10);
+                    .width(DataCache.generationNum);
             DataCache.generationLinesList.add(map.addPolyline(options2));
-            drawGenerationsLinesRecusor(event, DataCache.people.get(person.getFatherID()));
-            drawGenerationsLinesRecusor(event, DataCache.people.get(person.getMotherID()));
+            DataCache.generationNum = DataCache.generationNum - 2;
+            drawGenerationsLinesRecusor(DataCache.events.get(earliestFatherEventID), DataCache.people.get(person.getFatherID()));
+            drawGenerationsLinesRecusor(DataCache.events.get(earliestMotherEventID), DataCache.people.get(person.getMotherID()));
+            DataCache.generationNum = DataCache.generationNum + 2;
+        }
+    }
+
+    private void drawLifeStoryLines(Event event, Person person)
+    {
+        for (Event e : DataCache.personEvents.get(person.getPersonID()))
+        {
+            LatLng startPoint = new LatLng(event.getLatitude(), event.getLongitude());
+            LatLng endPoint = new LatLng(e.getLatitude(), e.getLongitude());
+            PolylineOptions options = new PolylineOptions()
+                    .add(startPoint)
+                    .add(endPoint)
+                    .color(getResources().getColor(R.color.blue))
+                    .width(10);
+            Polyline line = map.addPolyline(options);
+            DataCache.lifeStoryLines.add(line);
         }
     }
 
@@ -255,6 +294,42 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         for (Polyline P : DataCache.generationLinesList)
         {
             P.remove();
+        }
+
+        for (Polyline P : DataCache.lifeStoryLines)
+        {
+            P.remove();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main_menu, menu);
+
+        MenuItem fileMenuItem = menu.findItem(R.id.fileMenuItem);
+        fileMenuItem.setIcon(new IconDrawable(getActivity(), FontAwesomeIcons.fa_search)
+                .colorRes(R.color.white)
+                .actionBarSize());
+
+        MenuItem personMenuItem = menu.findItem(R.id.personMenuItem);
+        personMenuItem.setIcon(new IconDrawable(getActivity(), FontAwesomeIcons.fa_gear)
+                .colorRes(R.color.white)
+                .actionBarSize());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menu) {
+        switch(menu.getItemId()) {
+            case R.id.fileMenuItem:
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.personMenuItem:
+                Toast.makeText(getActivity(), getString(R.string.personMenuSelectedMessage), Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(menu);
         }
     }
 }

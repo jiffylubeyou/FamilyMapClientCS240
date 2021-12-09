@@ -31,6 +31,8 @@ public class DataCache {
     public static boolean lifeStoryLinesEnabled = true;
     public static Polyline spouseLines;
     public static List<Polyline> generationLinesList = new ArrayList<>();
+    public static List<Polyline> lifeStoryLines = new ArrayList<>();
+    public static Integer generationNum;
 //    //This string is a personID
 //    TreeSet<String> paternalAncestors = new TreeSet<String>();
 //    TreeSet<String> maternalAncestors = new TreeSet<String>();

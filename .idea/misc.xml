@@ -4,8 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/kenny/AndroidStudioProjects/FamilyMap/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/kenny/AndroidStudioProjects/FamilyMap/app/src/main/res/layout/activity_person.xml" value="0.30117753623188404" />
+        <entry key="..\:/Users/kenny/AndroidStudioProjects/FamilyMap/app/src/main/res/layout/event_item.xml" value="0.264945652173913" />
         <entry key="..\:/Users/kenny/AndroidStudioProjects/FamilyMap/app/src/main/res/layout/fragment_login.xml" value="0.33" />
         <entry key="..\:/Users/kenny/AndroidStudioProjects/FamilyMap/app/src/main/res/layout/fragment_maps.xml" value="0.27717391304347827" />
+        <entry key="..\:/Users/kenny/AndroidStudioProjects/FamilyMap/app/src/main/res/layout/list_item_group.xml" value="0.264945652173913" />
+        <entry key="..\:/Users/kenny/AndroidStudioProjects/FamilyMap/app/src/main/res/layout/person_activity.xml" value="0.264945652173913" />
+        <entry key="..\:/Users/kenny/AndroidStudioProjects/FamilyMap/app/src/main/res/layout/person_item.xml" value="0.1953125" />
+        <entry key="..\:/Users/kenny/AndroidStudioProjects/FamilyMap/app/src/main/res/layout/search_activity.xml" value="0.2484375" />
+        <entry key="..\:/Users/kenny/AndroidStudioProjects/FamilyMap/app/src/main/res/menu/main_menu.xml" value="0.42916666666666664" />
       </map>
     </option>
   </component>

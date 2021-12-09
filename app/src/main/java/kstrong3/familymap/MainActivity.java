@@ -1,13 +1,30 @@
 package kstrong3.familymap;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import model.Event;
+import model.Person;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.Listener {
 
@@ -16,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Lis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //for the icon stuff
         Iconify.with(new FontAwesomeModule());
 
         FragmentManager fragmentManager = this.getSupportFragmentManager();
