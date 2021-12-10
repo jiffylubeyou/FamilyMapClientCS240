@@ -27,6 +27,7 @@ public class PersonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //this line of code leaves expandableListView null, no idea why
         ExpandableListView expandableListView = findViewById(R.id.expandableListView);
 
         expandableListView.setAdapter(new ExpandableListAdapter(DataCache.peopleArray, DataCache.eventsArray));

@@ -19,6 +19,9 @@
         android:theme="@style/Theme.FamilyMap"
         android:usesCleartextTraffic="true">
         <activity
+            android:name="Activities.Settings"
+            android:exported="false" />
+        <activity
             android:name="Activities.PersonActivity"
             android:exported="false" />
         <!--

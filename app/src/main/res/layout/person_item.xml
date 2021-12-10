@@ -25,7 +25,7 @@
         android:layout_toEndOf="@id/PersonTitle">
 
         <TextView
-            android:id="@+id/person_item"
+            android:id="@+id/person_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Zion National Park" />

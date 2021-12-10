@@ -31,12 +31,16 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import Activities.PersonActivity;
 import Activities.SearchActivity;
+import Activities.Settings;
 import model.Event;
 import model.Person;
 
@@ -126,15 +130,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         for (int i = 0; i < DataCache.eventsArray.length; i++)
         {
             Integer colorInt;
-            if (eventTypes.containsKey(DataCache.eventsArray[i].getEventType()))
+            if (eventTypes.containsKey(DataCache.eventsArray[i].getEventType().toLowerCase()))
             {
-                 colorInt = eventTypes.get(DataCache.eventsArray[i].getEventType());
+                 colorInt = eventTypes.get(DataCache.eventsArray[i].getEventType().toLowerCase());
             }
             else
             {
                 iterator = (iterator + 1) % 10;
                 colorInt = iterator;
-                eventTypes.put(DataCache.eventsArray[i].getEventType(), colorInt);
+                eventTypes.put(DataCache.eventsArray[i].getEventType().toLowerCase(), colorInt);
             }
 
             float googleColor = BitmapDescriptorFactory.HUE_RED;
@@ -257,10 +261,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     private void drawLifeStoryLines(Event event, Person person)
     {
+        String earliestEventID = getEarliestEvent(person.getPersonID());
+        List<Integer> ints = new ArrayList<>();
+        TreeMap<Integer, Event> eventMap = new TreeMap<Integer, Event>();
         for (Event e : DataCache.personEvents.get(person.getPersonID()))
         {
-            LatLng startPoint = new LatLng(event.getLatitude(), event.getLongitude());
-            LatLng endPoint = new LatLng(e.getLatitude(), e.getLongitude());
+               ints.add(e.getYear());
+               eventMap.put(e.getYear(), e);
+        }
+
+        Collections.sort(ints);
+
+        for (int i = 0; i < ints.size() - 1; ++i)
+        {
+            Event e = DataCache.events.get(earliestEventID);
+            LatLng startPoint = new LatLng(eventMap.get(ints.get(i)).getLatitude(),
+                    eventMap.get(ints.get(i)).getLongitude());
+            LatLng endPoint = new LatLng(eventMap.get(ints.get(i + 1)).getLatitude(),
+                    eventMap.get(ints.get(i + 1)).getLongitude());
             PolylineOptions options = new PolylineOptions()
                     .add(startPoint)
                     .add(endPoint)
@@ -326,7 +344,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 startActivity(intent);
                 return true;
             case R.id.personMenuItem:
-                Toast.makeText(getActivity(), getString(R.string.personMenuSelectedMessage), Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(getActivity(), Settings.class);
+                startActivity(intent1);
                 return true;
             default:
                 return super.onOptionsItemSelected(menu);
