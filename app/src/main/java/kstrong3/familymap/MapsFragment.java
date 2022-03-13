@@ -67,7 +67,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                     + event.getYear() + ")";
             textView.setText(string);
 
-            if (person.getGender().equals("m")) {
+            if (person.getGender().equals("m"))
+            {
                 Drawable genderIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male).
                         colorRes(R.color.male).sizeDp(40);
                 imageView.setImageDrawable(genderIcon);
@@ -80,9 +81,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             }
 
             //draw the spouse lines
-            drawSpouseLines(event, person);
-            drawGenerationsLines(event, person);
-            drawLifeStoryLines(event, person);
+            if (DataCache.spouseLinesEnabled)
+            {
+                drawSpouseLines(event, person);
+            }
+
+            if (DataCache.familyTreeLinesEnabled)
+            {
+                drawGenerationsLines(event, person);
+            }
+
+            if (DataCache.lifeStoryLinesEnabled)
+            {
+                drawLifeStoryLines(event, person);
+            }
 
             return false;
         }
