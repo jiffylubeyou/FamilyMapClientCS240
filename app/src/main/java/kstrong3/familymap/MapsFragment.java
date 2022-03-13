@@ -141,6 +141,37 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         TreeMap<String, Integer> eventTypes = new TreeMap<String, Integer>();
         for (int i = 0; i < DataCache.eventsArray.length; i++)
         {
+            //if male events isn't enabled then skip to next event
+            if (!DataCache.maleEventsEnabled)
+            {
+                if ("m".equals(DataCache.people.get(DataCache.eventsArray[i].getPersonID()).getGender()))
+                {
+                    continue;
+                }
+            }
+            //if female events not enabled, skip
+            if (!DataCache.femaleEventsEnabled)
+            {
+                if ("f".equals(DataCache.people.get(DataCache.eventsArray[i].getPersonID()).getGender()))
+                {
+                    continue;
+                }
+            }
+            //checking if the paternal or maternal ancestors are enabled, if not then skip this loop
+            if (!DataCache.fatherSideEnabled)
+            {
+                if (DataCache.paternalAncestors.contains(DataCache.eventsArray[i].getPersonID())) {
+                    continue;
+                }
+            }
+            if (!DataCache.motherSideEnabled)
+            {
+                if (DataCache.maternalAncestors.contains(DataCache.eventsArray[i].getPersonID())) {
+                    continue;
+                }
+            }
+
+            //now we are good to add the event marker to the map
             Integer colorInt;
             if (eventTypes.containsKey(DataCache.eventsArray[i].getEventType().toLowerCase()))
             {

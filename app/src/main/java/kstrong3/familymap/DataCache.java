@@ -26,6 +26,8 @@ public class DataCache {
     public static TreeMap<String, Person> people = new TreeMap<String, Person>();
     public static TreeMap<String, Event> events = new TreeMap<String, Event>();
     public static TreeMap<String, List<Event>> personEvents = new TreeMap<String, List<Event>>();
+    public static TreeSet<String> paternalAncestors = new TreeSet<String>();
+    public static TreeSet<String> maternalAncestors = new TreeSet<String>();
     public static boolean spouseLinesEnabled = true;
     public static boolean familyTreeLinesEnabled = true;
     public static boolean lifeStoryLinesEnabled = true;
@@ -38,8 +40,7 @@ public class DataCache {
     public static List<Polyline> lifeStoryLines = new ArrayList<>();
     public static Integer generationNum;
 //    This string is a personID
-//    TreeSet<String> paternalAncestors = new TreeSet<String>();
-//    TreeSet<String> maternalAncestors = new TreeSet<String>();
+
 
     public static DataCache getInstance()
     {
@@ -121,6 +122,39 @@ public class DataCache {
             }
             personEvents.put(peopleArray[i].getPersonID(), eventsList);
         }
+
+        if (people.get(personID).getFatherID() != null)
+        {
+            populateFatherSide(people.get(personID).getFatherID());
+        }
+        if (people.get(personID).getMotherID() != null)
+        {
+            populateMotherSide(people.get(personID).getMotherID());
+        }
+    }
+
+    private void populateFatherSide(String fatherID)
+    {
+        paternalAncestors.add(fatherID);
+        if ((people.get(fatherID).getFatherID() == null) || (people.get(fatherID).getMotherID() == null))
+        {
+            return;
+        }
+
+        populateFatherSide(people.get(fatherID).getFatherID());
+        populateFatherSide(people.get(fatherID).getMotherID());
+    }
+
+    private void populateMotherSide(String motherID)
+    {
+        maternalAncestors.add(motherID);
+        if ((people.get(motherID).getFatherID() == null) || (people.get(motherID).getMotherID() == null))
+        {
+            return;
+        }
+
+        populateMotherSide(people.get(motherID).getFatherID());
+        populateMotherSide(people.get(motherID).getMotherID());
     }
 
     //    public Person getPersonByID(String personID)
