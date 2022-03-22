@@ -30,7 +30,16 @@ public class Settings extends AppCompatActivity {
         Switch maleEvents = findViewById(R.id.switch6);
         Switch femaleEvents = findViewById(R.id.switch7);
 
+
+        //make the buttons appear as true or false depending on previous value
         lifeStoryLines.setChecked(DataCache.lifeStoryLinesEnabled);
+        familyTreeLines.setChecked(DataCache.familyTreeLinesEnabled);
+        spouseLines.setChecked(DataCache.spouseLinesEnabled);
+        fathersSide.setChecked(DataCache.fatherSideEnabled);
+        mothersSide.setChecked(DataCache.motherSideEnabled);
+        maleEvents.setChecked(DataCache.maleEventsEnabled);
+        femaleEvents.setChecked(DataCache.femaleEventsEnabled);
+
 
         lifeStoryLines.setOnCheckedChangeListener((c, isOn)->lifeStoryLinesHelper(isOn));
         familyTreeLines.setOnCheckedChangeListener((c, isOn)->familyTreeLinesHelper(isOn));

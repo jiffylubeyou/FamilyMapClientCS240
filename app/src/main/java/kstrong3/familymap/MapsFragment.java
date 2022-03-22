@@ -250,6 +250,37 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     {
         if (person.getSpouseID() != null)
         {
+            //check if we should draw the lines first
+            if (!DataCache.maleEventsEnabled)
+            {
+                if ("m".equals(DataCache.people.get(person.getSpouseID()).getGender()))
+                {
+                    return;
+                }
+            }
+            //if female events not enabled, skip
+            if (!DataCache.femaleEventsEnabled)
+            {
+                if ("f".equals(DataCache.people.get(person.getSpouseID()).getGender()))
+                {
+                    return;
+                }
+            }
+            //checking if the paternal or maternal ancestors are enabled, if not then skip this loop
+            if (!DataCache.fatherSideEnabled)
+            {
+                if (DataCache.paternalAncestors.contains(person.getSpouseID())) {
+                    return;
+                }
+            }
+            if (!DataCache.motherSideEnabled)
+            {
+                if (DataCache.maternalAncestors.contains(person.getSpouseID())) {
+                    return;
+                }
+            }
+
+            //go ahead and draw the lines
             String earliestEventID = getEarliestEvent(person.getSpouseID());
 
             LatLng startPoint = new LatLng(event.getLatitude(), event.getLongitude());
@@ -274,6 +305,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     {
         if (person.getFatherID() != null && person.getMotherID() != null)
         {
+
             String earliestFatherEventID = getEarliestEvent(person.getFatherID());
             String earliestMotherEventID = getEarliestEvent(person.getMotherID());
 
@@ -281,20 +313,58 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             LatLng fatherPoint = new LatLng(DataCache.events.get(earliestFatherEventID).getLatitude(),
                     DataCache.events.get(earliestFatherEventID).getLongitude());
             LatLng motherPoint = new LatLng(DataCache.events.get(earliestMotherEventID).getLatitude(),
-                    DataCache.events.get(earliestMotherEventID).getLongitude());
-            PolylineOptions options = new PolylineOptions()
-                    .add(startPoint)
-                    .add(fatherPoint)
-                    .color(getResources().getColor(R.color.green))
-                    .width(DataCache.generationNum);
-            Polyline line1 = map.addPolyline(options);
-            DataCache.generationLinesList.add(line1);
-            PolylineOptions options2 = new PolylineOptions()
-                    .add(startPoint)
-                    .add(motherPoint)
-                    .color(getResources().getColor(R.color.green))
-                    .width(DataCache.generationNum);
-            DataCache.generationLinesList.add(map.addPolyline(options2));
+                DataCache.events.get(earliestMotherEventID).getLongitude());
+
+            //see if this current person passes the gender check
+            if (!DataCache.maleEventsEnabled && ("m".equals(DataCache.people.get(person.getPersonID()).getGender())))
+            {
+                ;
+            }
+            else if (!DataCache.femaleEventsEnabled && ("f".equals(DataCache.people.get(person.getPersonID()).getGender())))
+            {
+                ;
+            }
+            else {
+                //fathers only if maleEvents are enabled
+                if (DataCache.maleEventsEnabled) {
+                    //checking if the paternal or maternal ancestors are enabled, if not then skip this loop
+                    if (!DataCache.fatherSideEnabled && (DataCache.paternalAncestors.contains(person.getFatherID()) ||
+                            DataCache.paternalAncestors.contains(person.getPersonID()))) {
+                        ;
+                    } else if (!DataCache.motherSideEnabled && (DataCache.maternalAncestors.contains(person.getFatherID()) ||
+                            DataCache.maternalAncestors.contains(person.getPersonID()))) {
+                        ;
+                    } else {
+                        PolylineOptions options = new PolylineOptions()
+                                .add(startPoint)
+                                .add(fatherPoint)
+                                .color(getResources().getColor(R.color.green))
+                                .width(DataCache.generationNum);
+                        Polyline line1 = map.addPolyline(options);
+                        DataCache.generationLinesList.add(line1);
+                    }
+                }
+
+                //mothers only if the femaleEvents are enabled
+                if (DataCache.femaleEventsEnabled) {
+                    if (!DataCache.fatherSideEnabled && (DataCache.paternalAncestors.contains(person.getMotherID()) ||
+                            DataCache.paternalAncestors.contains(person.getPersonID()))) {
+                        ;
+                    } else if (!DataCache.motherSideEnabled && (DataCache.maternalAncestors.contains(person.getMotherID()) ||
+                            DataCache.maternalAncestors.contains(person.getPersonID()))) {
+                        ;
+                    } else {
+                        PolylineOptions options2 = new PolylineOptions()
+                                .add(startPoint)
+                                .add(motherPoint)
+                                .color(getResources().getColor(R.color.green))
+                                .width(DataCache.generationNum);
+                        DataCache.generationLinesList.add(map.addPolyline(options2));
+                    }
+                }
+            }
+
+
             DataCache.generationNum = DataCache.generationNum - 2;
             drawGenerationsLinesRecusor(DataCache.events.get(earliestFatherEventID), DataCache.people.get(person.getFatherID()));
             drawGenerationsLinesRecusor(DataCache.events.get(earliestMotherEventID), DataCache.people.get(person.getMotherID()));
