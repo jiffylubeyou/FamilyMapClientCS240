@@ -394,4 +394,119 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 return super.onOptionsItemSelected(menu);
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (map == null)
+        {
+            return;
+        }
+        map.clear();
+        map.setOnMarkerClickListener(listener);
+        map.setOnMapLoadedCallback(this);
+
+        // Add a marker in Sydney and move the camera
+        LatLng sydney = new LatLng(-34, 151);
+        map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        //populate the map with the events
+        Integer iterator = 0;
+        TreeMap<String, Integer> eventTypes = new TreeMap<String, Integer>();
+        for (int i = 0; i < DataCache.eventsArray.length; i++)
+        {
+            //if male events isn't enabled then skip to next event
+            if (!DataCache.maleEventsEnabled)
+            {
+                if ("m".equals(DataCache.people.get(DataCache.eventsArray[i].getPersonID()).getGender()))
+                {
+                    continue;
+                }
+            }
+            //if female events not enabled, skip
+            if (!DataCache.femaleEventsEnabled)
+            {
+                if ("f".equals(DataCache.people.get(DataCache.eventsArray[i].getPersonID()).getGender()))
+                {
+                    continue;
+                }
+            }
+            //checking if the paternal or maternal ancestors are enabled, if not then skip this loop
+            if (!DataCache.fatherSideEnabled)
+            {
+                if (DataCache.paternalAncestors.contains(DataCache.eventsArray[i].getPersonID())) {
+                    continue;
+                }
+            }
+            if (!DataCache.motherSideEnabled)
+            {
+                if (DataCache.maternalAncestors.contains(DataCache.eventsArray[i].getPersonID())) {
+                    continue;
+                }
+            }
+
+            //now we are good to add the event marker to the map
+            Integer colorInt;
+            if (eventTypes.containsKey(DataCache.eventsArray[i].getEventType().toLowerCase()))
+            {
+                colorInt = eventTypes.get(DataCache.eventsArray[i].getEventType().toLowerCase());
+            }
+            else
+            {
+                iterator = (iterator + 1) % 10;
+                colorInt = iterator;
+                eventTypes.put(DataCache.eventsArray[i].getEventType().toLowerCase(), colorInt);
+            }
+
+            float googleColor = BitmapDescriptorFactory.HUE_RED;
+            if (colorInt.equals(0))
+            {
+                googleColor = BitmapDescriptorFactory.HUE_RED;
+            }
+            if (colorInt.equals(1))
+            {
+                googleColor = BitmapDescriptorFactory.HUE_GREEN;
+            }
+            if (colorInt.equals(2))
+            {
+                googleColor = BitmapDescriptorFactory.HUE_BLUE;
+            }
+            if (colorInt.equals(3))
+            {
+                googleColor = BitmapDescriptorFactory.HUE_ORANGE;
+            }
+            if (colorInt.equals(4))
+            {
+                googleColor = BitmapDescriptorFactory.HUE_AZURE;
+            }
+            if (colorInt.equals(5))
+            {
+                googleColor = BitmapDescriptorFactory.HUE_CYAN;
+            }
+            if (colorInt.equals(6))
+            {
+                googleColor = BitmapDescriptorFactory.HUE_MAGENTA;
+            }
+            if (colorInt.equals(7))
+            {
+                googleColor = BitmapDescriptorFactory.HUE_ROSE;
+            }
+            if (colorInt.equals(8))
+            {
+                googleColor = BitmapDescriptorFactory.HUE_VIOLET;
+            }
+            if (colorInt.equals(9))
+            {
+                googleColor = BitmapDescriptorFactory.HUE_YELLOW;
+            }
+
+
+            LatLng temp = new LatLng(DataCache.eventsArray[i].getLatitude(), DataCache.eventsArray[i].getLongitude());
+            Marker marker = map.addMarker((new MarkerOptions().position(temp).title(
+                    DataCache.eventsArray[i].getCity() + ", " + DataCache.eventsArray[i].getCountry()
+            )).icon(BitmapDescriptorFactory.defaultMarker(googleColor)));
+
+            marker.setTag(DataCache.eventsArray[i]);
+        }
+    }
 }

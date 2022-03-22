@@ -30,6 +30,8 @@ public class Settings extends AppCompatActivity {
         Switch maleEvents = findViewById(R.id.switch6);
         Switch femaleEvents = findViewById(R.id.switch7);
 
+        lifeStoryLines.setChecked(DataCache.lifeStoryLinesEnabled);
+
         lifeStoryLines.setOnCheckedChangeListener((c, isOn)->lifeStoryLinesHelper(isOn));
         familyTreeLines.setOnCheckedChangeListener((c, isOn)->familyTreeLinesHelper(isOn));
         spouseLines.setOnCheckedChangeListener((c, isOn)->spouseLinesHelper(isOn));
@@ -38,6 +40,10 @@ public class Settings extends AppCompatActivity {
         maleEvents.setOnCheckedChangeListener((c,isOn)->maleEventsHelper(isOn));
         femaleEvents.setOnCheckedChangeListener((c,isOn)->femaleEventsHelper(isOn));
     }
+
+
+
+
 
     //these set the Datacache booleans that are checked in the MapsFragment before loading the lines
     private void lifeStoryLinesHelper(boolean isOn)
@@ -54,18 +60,22 @@ public class Settings extends AppCompatActivity {
     {
         DataCache.spouseLinesEnabled = isOn;
     }
+
     private void fatherSideHelper(boolean isOn)
     {
         DataCache.fatherSideEnabled = isOn;
     }
+
     private void motherSideHelper(boolean isOn)
     {
         DataCache.motherSideEnabled = isOn;
     }
+
     private void maleEventsHelper(boolean isOn)
     {
         DataCache.maleEventsEnabled = isOn;
     }
+
     private void femaleEventsHelper(boolean isOn)
     {
         DataCache.femaleEventsEnabled = isOn;
