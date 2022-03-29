@@ -12,6 +12,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -71,5 +72,21 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Lis
         fragmentManager.beginTransaction()
                 .replace(R.id.mainActivity, fragment)
                 .commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (DataCache.logout)
+        {
+            FragmentManager fragmentManager = this.getSupportFragmentManager();
+            Fragment fragment = new LoginFragment();
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.mainActivity, fragment)
+                    .commit();
+            DataCache.logout = false;
+        }
     }
 }

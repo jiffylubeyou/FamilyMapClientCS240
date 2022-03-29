@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -29,6 +30,7 @@ public class Settings extends AppCompatActivity {
         Switch mothersSide = findViewById(R.id.switch5);
         Switch maleEvents = findViewById(R.id.switch6);
         Switch femaleEvents = findViewById(R.id.switch7);
+        Button logoutButton = findViewById(R.id.logoutbutton);
 
 
         //make the buttons appear as true or false depending on previous value
@@ -39,6 +41,8 @@ public class Settings extends AppCompatActivity {
         mothersSide.setChecked(DataCache.motherSideEnabled);
         maleEvents.setChecked(DataCache.maleEventsEnabled);
         femaleEvents.setChecked(DataCache.femaleEventsEnabled);
+
+        logoutButton.setOnClickListener((view)->logoutButtonHandler());
 
 
         lifeStoryLines.setOnCheckedChangeListener((c, isOn)->lifeStoryLinesHelper(isOn));
@@ -88,5 +92,14 @@ public class Settings extends AppCompatActivity {
     private void femaleEventsHelper(boolean isOn)
     {
         DataCache.femaleEventsEnabled = isOn;
+    }
+
+    private void logoutButtonHandler()
+    {
+        DataCache.clear();
+
+        DataCache.logout = true;
+
+        finish();
     }
 }

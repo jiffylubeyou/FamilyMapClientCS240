@@ -35,6 +35,7 @@ public class DataCache {
     public static boolean motherSideEnabled = true;
     public static boolean maleEventsEnabled = true;
     public static boolean femaleEventsEnabled = true;
+    public static boolean logout = false;
     public static Polyline spouseLines;
     public static List<Polyline> generationLinesList = new ArrayList<>();
     public static List<Polyline> lifeStoryLines = new ArrayList<>();
@@ -131,6 +132,33 @@ public class DataCache {
         {
             populateMotherSide(people.get(personID).getMotherID());
         }
+    }
+
+    public static void clear()
+    {
+        //build the clear here
+        username = null;
+        personID = null;
+        userFirstName = null;
+        peopleArray = null;
+        eventsArray = null;
+        people = new TreeMap<String, Person>();
+        events = new TreeMap<String, Event>();
+        personEvents = new TreeMap<String, List<Event>>();
+        paternalAncestors = new TreeSet<String>();
+        maternalAncestors = new TreeSet<String>();
+        spouseLinesEnabled = true;
+        familyTreeLinesEnabled = true;
+        lifeStoryLinesEnabled = true;
+        fatherSideEnabled = true;
+        motherSideEnabled = true;
+        maleEventsEnabled = true;
+        femaleEventsEnabled = true;
+        logout = false;
+        spouseLines = null;
+        generationLinesList = new ArrayList<>();
+        lifeStoryLines = new ArrayList<>();
+        generationNum = null;
     }
 
     private void populateFatherSide(String fatherID)
