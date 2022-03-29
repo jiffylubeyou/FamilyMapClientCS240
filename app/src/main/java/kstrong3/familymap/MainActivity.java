@@ -76,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Lis
 
     @Override
     protected void onResume() {
-        super.onResume();
-
         if (DataCache.logout)
         {
             FragmentManager fragmentManager = this.getSupportFragmentManager();
@@ -88,5 +86,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Lis
                     .commit();
             DataCache.logout = false;
         }
+
+        //where this is might be part of the problem
+        super.onResume();
     }
 }
