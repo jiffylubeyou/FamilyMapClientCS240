@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Lis
         if (DataCache.logout)
         {
             FragmentManager fragmentManager = this.getSupportFragmentManager();
-            Fragment fragment = new LoginFragment();
+            Fragment fragment = createLoginFragment();
 
             fragmentManager.beginTransaction()
                     .replace(R.id.mainActivity, fragment)
@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Lis
             DataCache.logout = false;
         }
 
-        //where this is might be part of the problem
         super.onResume();
     }
 }
