@@ -25,7 +25,7 @@ public class PersonActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.person_activity);
 
         //this line of code leaves expandableListView null, no idea why
         ExpandableListView expandableListView = findViewById(R.id.expandableListView);
