@@ -2,19 +2,33 @@ package Activities;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import kstrong3.familymap.DataCache;
+import kstrong3.familymap.EventMapFragment;
+import kstrong3.familymap.LoginFragment;
 import kstrong3.familymap.MainActivity;
+import kstrong3.familymap.MapsFragment;
 import kstrong3.familymap.R;
 import model.Event;
 import model.Person;
@@ -27,10 +41,47 @@ public class PersonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.person_activity);
 
+        //this grabs the info for the event that was clicked on
+        Person person = DataCache.tempPerson;
+
         //this line of code leaves expandableListView null, no idea why
         ExpandableListView expandableListView = findViewById(R.id.expandableListView);
 
-        expandableListView.setAdapter(new ExpandableListAdapter(DataCache.peopleArray, DataCache.eventsArray));
+        expandableListView.setAdapter(new ExpandableListAdapter(DataCache.personEvents.get(person.getPersonID()),
+                person));
+
+        //this sets the text fields before the expandable list views
+        TextView firstName = findViewById(R.id.firstName);
+        TextView lastName = findViewById(R.id.lastName);
+        TextView gender = findViewById(R.id.gender);
+
+
+        firstName.setText(person.getFirstName());
+        lastName.setText(person.getLastName());
+        if (person.getGender().equals("m"))
+        {
+            gender.setText("Male");
+        }
+        else if (person.getGender().equals("f"))
+        {
+            gender.setText("Female");
+        }
+        else
+        {
+            gender.setText("No Gender???????????");
+        }
+
+    }
+
+    private void switchToEventMapFragment(Event event)
+    {
+        DataCache.tempEvent = event;
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        Fragment fragment = new EventMapFragment();
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.person_activity, fragment)
+                .commit();
     }
 
     private class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -40,15 +91,23 @@ public class PersonActivity extends AppCompatActivity {
 
         private final List<Event> events;
         private final List<Person> people;
+        private final model.Person person;
 
-        ExpandableListAdapter(model.Person[] people, model.Event[] events) {
-            this.events = new ArrayList<>();
+        ExpandableListAdapter(List<Event> events, model.Person people) {
+            this.person = people;
+            this.events = events;
             this.people = new ArrayList<>();
-            for (int i = 0; i < people.length; ++i) {
-                this.people.add(people[i]);
+            if (people.getFatherID() != null)
+            {
+                this.people.add(DataCache.people.get(people.getFatherID()));
             }
-            for (int i = 0; i < events.length; ++i) {
-                this.events.add(events[i]);
+            if (people.getMotherID() != null)
+            {
+                this.people.add(DataCache.people.get(people.getMotherID()));
+            }
+            if (people.getSpouseID() != null)
+            {
+                this.people.add(DataCache.people.get(people.getSpouseID()));
             }
         }
 
@@ -155,27 +214,62 @@ public class PersonActivity extends AppCompatActivity {
             resortNameView.setText(events.get(childPosition).getEventType());
 
             TextView resortLocationView = skiResortItemView.findViewById(R.id.event_item);
-            resortLocationView.setText(events.get(childPosition).getCountry());
+            resortLocationView.setText(events.get(childPosition).getCountry()
+            + ", " + events.get(childPosition).getCity() + " " + events.get(childPosition).getYear()
+            + " " + person.getFirstName() + " " + person.getLastName());
 
             skiResortItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Toast.makeText(MainActivity.this, getString(R.string.eventsTitle, events.get(childPosition).getEventType()), Toast.LENGTH_SHORT).show();
+                    //the new google map has to go here, don't make a new map fragment
+                    switchToEventMapFragment(events.get(childPosition));
                 }
             });
         }
 
+
+
         private void initializeHikingTrailView(View hikingTrailItemView, final int childPosition) {
             TextView trailNameView = hikingTrailItemView.findViewById(R.id.PersonTitle);
-            trailNameView.setText(people.get(childPosition).getFirstName());
+            trailNameView.setText(people.get(childPosition).getFirstName() + " " +  people.get(childPosition).getLastName());
 
             TextView trailLocationView = hikingTrailItemView.findViewById(R.id.person_item);
-            trailLocationView.setText(people.get(childPosition).getLastName());
+            if (people.get(childPosition).getPersonID().equals(person.getFatherID()))
+            {
+                trailLocationView.setText("Father");
+            }
+            if (people.get(childPosition).getPersonID().equals(person.getMotherID()))
+            {
+                trailLocationView.setText("Mother");
+            }
+            if (people.get(childPosition).getPersonID().equals(person.getSpouseID()))
+            {
+                trailLocationView.setText("Spouse");
+            }
+
+            //set the image icon for the person
+            ImageView imageView = hikingTrailItemView.findViewById(R.id.gender);
+
+            if (people.get(childPosition).getGender().equals("m"))
+            {
+                Drawable genderIcon = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_male).
+                        colorRes(R.color.male).sizeDp(40);
+                imageView.setImageDrawable(genderIcon);
+            }
+            else
+            {
+                Drawable genderIcon = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_female).
+                        colorRes(R.color.female).sizeDp(40);
+                imageView.setImageDrawable(genderIcon);
+            }
 
             hikingTrailItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Toast.makeText(MainActivity.this, getString(R.string.hikingTrailToastText, hikingTrails.get(childPosition).getName()), Toast.LENGTH_SHORT).show();
+                    DataCache.tempPerson = people.get(childPosition);
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
                 }
             });
         }

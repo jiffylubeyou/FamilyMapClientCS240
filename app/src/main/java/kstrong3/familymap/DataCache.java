@@ -40,6 +40,8 @@ public class DataCache {
     public static List<Polyline> generationLinesList = new ArrayList<>();
     public static List<Polyline> lifeStoryLines = new ArrayList<>();
     public static Integer generationNum;
+    public static Person tempPerson;
+    public static Event tempEvent;
 //    This string is a personID
 
 
@@ -159,6 +161,8 @@ public class DataCache {
         generationLinesList = new ArrayList<>();
         lifeStoryLines = new ArrayList<>();
         generationNum = null;
+        tempPerson = null;
+        tempEvent = null;
     }
 
     private void populateFatherSide(String fatherID)

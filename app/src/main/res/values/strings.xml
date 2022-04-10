@@ -19,8 +19,8 @@
     <string name="fileMenuSelectedMessage">You selected the file asdf</string>
     <string name="personMenu">File</string>
     <string name="personMenuSelectedMessage">You selected the person asdf</string>
-    <string name="eventsTitle">Events</string>
-    <string name="personTitle">People</string>
+    <string name="eventsTitle">Life Events</string>
+    <string name="personTitle">Family</string>
     <string name="title_activity_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>

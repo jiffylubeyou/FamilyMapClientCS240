@@ -4,25 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp">
+
+        <ImageView
+            android:id="@+id/gender"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
 
     <TextView
         android:id="@+id/PersonTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
         android:layout_marginStart="8dp"
         android:textSize="18sp"
         android:textStyle="bold"
         tools:text="Angel's Landing" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="16dp"
-        android:layout_toEndOf="@id/PersonTitle">
+
 
         <TextView
             android:id="@+id/person_title"

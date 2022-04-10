@@ -21,7 +21,7 @@
         <activity android:parentActivityName=".MainActivity"
             android:name="Activities.Settings"
             android:exported="false" />
-        <activity
+        <activity android:parentActivityName=".MainActivity"
             android:name="Activities.PersonActivity"
             android:exported="false" />
         <!--

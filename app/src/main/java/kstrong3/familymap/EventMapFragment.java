@@ -45,68 +45,19 @@ import model.Event;
 import model.Person;
 
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
+public class EventMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
     private GoogleMap map;
     private TextView textView;
     private ImageView imageView;
 
-    private GoogleMap.OnMarkerClickListener listener = new GoogleMap.OnMarkerClickListener() {
-        @Override
-        public boolean onMarkerClick(@NonNull Marker marker) {
 
-            removeLines();
-
-            Event event = (Event) marker.getTag();
-            Person person = DataCache.people.get(event.getPersonID());
-
-            LatLng latLng = new LatLng(event.getLatitude(), event.getLongitude());
-            map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            //pass in user info here
-            String string = person.getFirstName() + " " + person.getLastName() + " \n" +
-                    event.getEventType() + ": " + event.getCity() + ", " + event.getCountry() + " ("
-                    + event.getYear() + ")";
-            textView.setText(string);
-
-            if (person.getGender().equals("m"))
-            {
-                Drawable genderIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male).
-                        colorRes(R.color.male).sizeDp(40);
-                imageView.setImageDrawable(genderIcon);
-            }
-            else
-            {
-                Drawable genderIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_female).
-                        colorRes(R.color.female).sizeDp(40);
-                imageView.setImageDrawable(genderIcon);
-            }
-
-            //draw the spouse lines
-            if (DataCache.spouseLinesEnabled)
-            {
-                drawSpouseLines(event, person);
-            }
-
-            if (DataCache.familyTreeLinesEnabled)
-            {
-                drawGenerationsLines(event, person);
-            }
-
-            if (DataCache.lifeStoryLinesEnabled)
-            {
-                drawLifeStoryLines(event, person);
-            }
-
-            DataCache.tempPerson = person;
-            return false;
-        }
-    };
 
     @Override
     public View onCreateView(@NonNull LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(layoutInflater, container, savedInstanceState);
         View view = layoutInflater.inflate(R.layout.fragment_maps, container, false);
 
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
 
 
         textView = view.findViewById(R.id.mapTextView);
@@ -115,26 +66,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        LinearLayout linearLayout = view.findViewById(R.id.mapLinearLayout);
-        linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), PersonActivity.class);
-                startActivity(intent);
-            }
-        });
-
         return view;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        map.setOnMarkerClickListener(listener);
         map.setOnMapLoadedCallback(this);
 
+        Event event = DataCache.tempEvent;
+
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
+        LatLng sydney = new LatLng(event.getLatitude(), event.getLongitude());
         map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
 
         //populate the map with the events
@@ -176,7 +119,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             Integer colorInt;
             if (eventTypes.containsKey(DataCache.eventsArray[i].getEventType().toLowerCase()))
             {
-                 colorInt = eventTypes.get(DataCache.eventsArray[i].getEventType().toLowerCase());
+                colorInt = eventTypes.get(DataCache.eventsArray[i].getEventType().toLowerCase());
             }
             else
             {
@@ -236,6 +179,48 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             marker.setTag(DataCache.eventsArray[i]);
         }
 
+        removeLines();
+
+        Person person = DataCache.people.get(event.getPersonID());
+
+        LatLng latLng = new LatLng(event.getLatitude(), event.getLongitude());
+        map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        //pass in user info here
+        String string = person.getFirstName() + " " + person.getLastName() + " \n" +
+                event.getEventType() + ": " + event.getCity() + ", " + event.getCountry() + " ("
+                + event.getYear() + ")";
+        textView.setText(string);
+
+        if (person.getGender().equals("m"))
+        {
+            Drawable genderIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male).
+                    colorRes(R.color.male).sizeDp(40);
+            imageView.setImageDrawable(genderIcon);
+        }
+        else
+        {
+            Drawable genderIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_female).
+                    colorRes(R.color.female).sizeDp(40);
+            imageView.setImageDrawable(genderIcon);
+        }
+
+        //draw the spouse lines
+        if (DataCache.spouseLinesEnabled)
+        {
+            drawSpouseLines(event, person);
+        }
+
+        if (DataCache.familyTreeLinesEnabled)
+        {
+            drawGenerationsLines(event, person);
+        }
+
+        if (DataCache.lifeStoryLinesEnabled)
+        {
+            drawLifeStoryLines(event, person);
+        }
+
+        DataCache.tempPerson = person;
     }
 
     @Override
@@ -314,7 +299,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             LatLng fatherPoint = new LatLng(DataCache.events.get(earliestFatherEventID).getLatitude(),
                     DataCache.events.get(earliestFatherEventID).getLongitude());
             LatLng motherPoint = new LatLng(DataCache.events.get(earliestMotherEventID).getLatitude(),
-                DataCache.events.get(earliestMotherEventID).getLongitude());
+                    DataCache.events.get(earliestMotherEventID).getLongitude());
 
             //see if this current person passes the gender check
             if (!DataCache.maleEventsEnabled && ("m".equals(DataCache.people.get(person.getPersonID()).getGender())))
@@ -380,8 +365,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         TreeMap<Integer, Event> eventMap = new TreeMap<Integer, Event>();
         for (Event e : DataCache.personEvents.get(person.getPersonID()))
         {
-               ints.add(e.getYear());
-               eventMap.put(e.getYear(), e);
+            ints.add(e.getYear());
+            eventMap.put(e.getYear(), e);
         }
 
         Collections.sort(ints);
@@ -474,7 +459,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             return;
         }
         map.clear();
-        map.setOnMarkerClickListener(listener);
         map.setOnMapLoadedCallback(this);
 
         // Add a marker in Sydney and move the camera
