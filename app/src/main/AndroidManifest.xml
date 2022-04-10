@@ -24,6 +24,9 @@
         <activity android:parentActivityName=".MainActivity"
             android:name="Activities.PersonActivity"
             android:exported="false" />
+        <activity android:parentActivityName=".MainActivity"
+            android:name="Activities.SearchActivity"
+            android:exported="false" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
